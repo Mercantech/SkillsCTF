@@ -117,6 +117,7 @@
       tab.classList.toggle('active', isActive);
       tab.setAttribute('aria-selected', isActive ? 'true' : 'false');
     });
+    document.body.classList.toggle('screen-leaderboard', name === 'leaderboard');
   }
 
   function startTimer() {

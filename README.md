@@ -14,10 +14,12 @@ Capture The Flag-platform til Skills 2026 med dark mode og neon orange tema. Byg
 docker compose up --build
 ```
 
-Åbn derefter [http://localhost:3000](http://localhost:3000).
+Åbn derefter [http://localhost:13000](http://localhost:13000).
 
-- **Backend:** Node (Express) på port 3000  
-- **Database:** PostgreSQL 16 på port 5432 (bruger `ctf`, database `skillsctf`)
+- **Backend:** Node (Express) – host port **13000** (inden i containeren 3000)  
+- **Database:** PostgreSQL 16 – host port **15432** (inden i containeren 5432; bruger `ctf`, database `skillsctf`)
+
+Portene er valgt så deployment på en fælles server ikke kolliderer med andre tjenester (fx standard PostgreSQL på 5432). På serveren: åbn `http://<server>:13000`.
 
 ## Udvikling med Docker (auto-opdatering)
 
