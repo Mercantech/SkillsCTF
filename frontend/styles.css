@@ -1,0 +1,1057 @@
+/* ========== SKILLS CTF 2026 — Dark + Neon Orange ========== */
+:root {
+  --bg-deep: #050508;
+  --bg-dark: #0a0a0e;
+  --bg-panel: #0d0d12;
+  --border: #1a1a22;
+  --neon: #ff6600;
+  --neon-bright: #ff8533;
+  --neon-dim: #cc5200;
+  --neon-glow: rgba(255, 102, 0, 0.6);
+  --neon-glow-strong: rgba(255, 102, 0, 0.9);
+  --text: #e8e8ec;
+  --text-dim: #8888a0;
+  --success: #22c55e;
+  --error: #ef4444;
+  --font-mono: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
+  --font-display: 'Orbitron', var(--font-mono);
+  --tmux-title-bg: #1a1a22;
+  --tmux-title-fg: #ff6600;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 16px;
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: var(--bg-deep);
+  color: var(--text);
+  font-family: var(--font-mono);
+  line-height: 1.5;
+  overflow-x: hidden;
+  position: relative;
+}
+
+/* ---------- Background effects ---------- */
+.grid-bg {
+  position: fixed;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(255, 102, 0, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 102, 0, 0.03) 1px, transparent 1px);
+  background-size: 40px 40px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.scanlines {
+  position: fixed;
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0, 0, 0, 0.15) 2px,
+    rgba(0, 0, 0, 0.15) 4px
+  );
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0.4;
+}
+
+/* ---------- Tmux-style nav (window tabs) ---------- */
+.nav-tmux {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 10;
+  background: var(--tmux-title-bg);
+  border-bottom: 1px solid var(--neon);
+  box-shadow: 0 0 15px var(--neon-glow);
+}
+
+.nav-tmux-inner {
+  display: flex;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 0.5rem;
+}
+
+.nav-tab {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  padding: 0.35rem 0.85rem;
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid transparent;
+  color: var(--text-dim);
+  cursor: pointer;
+  margin-bottom: -1px;
+  transition: color 0.2s, border-color 0.2s;
+}
+
+.nav-tab:hover {
+  color: var(--text);
+}
+
+.nav-tab.active {
+  color: var(--neon);
+  border-bottom-color: var(--neon);
+  text-shadow: 0 0 8px var(--neon-glow);
+}
+
+/* ---------- Header (compact when using nav) ---------- */
+.header {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+}
+
+.header-compact {
+  padding: 0.35rem 1rem 0.3rem;
+  margin-top: 32px;
+}
+
+.header-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  max-width: 100%;
+  padding: 0.15rem 0 0.25rem;
+  margin-bottom: 0.15rem;
+}
+
+.header-toolbar[hidden] {
+  display: none !important;
+}
+
+.logo-wrap {
+  position: relative;
+  display: inline-block;
+}
+
+.logo-text {
+  font-family: var(--font-display);
+  font-size: clamp(1.1rem, 3.5vw, 1.75rem);
+  font-weight: 900;
+  margin: 0;
+  letter-spacing: 0.1em;
+  color: var(--neon);
+  text-shadow: 0 0 10px var(--neon-glow);
+  line-height: 1.2;
+}
+
+.year {
+  font-size: 0.6em;
+  letter-spacing: 0.3em;
+  opacity: 0.9;
+}
+
+.glitch {
+  position: relative;
+  display: inline-block;
+}
+
+.glitch::before,
+.glitch::after {
+  content: attr(data-text);
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.glitch::before {
+  color: var(--neon-bright);
+  animation: glitch-1 3s infinite linear alternate-reverse;
+  clip-path: polygon(0 0, 100% 0, 100% 35%, 0 35%);
+  transform: translate(-2px, 2px);
+}
+
+.glitch::after {
+  color: var(--neon-dim);
+  animation: glitch-2 2.5s infinite linear alternate-reverse;
+  clip-path: polygon(0 65%, 100% 65%, 100% 100%, 0 100%);
+  transform: translate(2px, -2px);
+}
+
+@keyframes glitch-1 {
+  0%, 100% { opacity: 0.8; transform: translate(-2px, 2px); }
+  50% { opacity: 0.4; transform: translate(2px, -2px); }
+}
+
+@keyframes glitch-2 {
+  0%, 100% { opacity: 0.4; transform: translate(2px, -2px); }
+  50% { opacity: 0.8; transform: translate(-2px, 2px); }
+}
+
+.tagline {
+  margin: 0.25rem 0 0;
+  font-size: 0.65rem;
+  letter-spacing: 0.25em;
+  color: var(--text-dim);
+  text-transform: uppercase;
+}
+
+/* Hollywood/Linux: scrolling ticker */
+.ticker-wrap {
+  margin-top: 0.5rem;
+  overflow: hidden;
+  width: 100%;
+  max-width: 100%;
+  border-top: 1px solid rgba(255, 102, 0, 0.3);
+  border-bottom: 1px solid rgba(255, 102, 0, 0.2);
+  padding: 0.25rem 0;
+}
+
+.ticker-inner {
+  display: flex;
+  width: max-content;
+  animation: ticker-scroll 20s linear infinite;
+}
+
+.ticker {
+  flex-shrink: 0;
+  padding-right: 3em;
+  white-space: nowrap;
+  color: var(--neon-dim);
+  font-size: 0.7rem;
+  letter-spacing: 0.2em;
+  text-shadow: 0 0 8px var(--neon-glow);
+}
+
+@keyframes ticker-scroll {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+/* Blinkende cursor (terminal) */
+.cursor-blink {
+  display: inline-block;
+  width: 0.5em;
+  height: 1em;
+  background: var(--neon);
+  margin-left: 0.1em;
+  vertical-align: -0.15em;
+  animation: cursor-blink 1s step-end infinite;
+  box-shadow: 0 0 6px var(--neon-glow);
+}
+
+@keyframes cursor-blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+/* ---------- Screens (full view, one visible) ---------- */
+.screen {
+  position: relative;
+  z-index: 2;
+  min-height: calc(100vh - 120px);
+  padding: 0 1rem 2rem;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.screen[hidden] {
+  display: none !important;
+}
+
+/* ---------- Screen 1: Leaderboard (fylder hele skærmhøjden) ---------- */
+.screen-leaderboard {
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - 110px);
+  min-height: 400px;
+  padding: 0 1rem 1rem;
+  max-width: none;
+}
+
+.leaderboard-layout {
+  display: grid;
+  grid-template-columns: 1fr minmax(320px, 520px) 1fr;
+  gap: 1rem;
+  align-items: stretch;
+  margin-top: 0.5rem;
+  flex: 1;
+  min-height: 0;
+}
+
+@media (max-width: 1100px) {
+  .leaderboard-layout {
+    grid-template-columns: 1fr;
+  }
+  .leaderboard-side { display: none; }
+}
+
+.leaderboard-side {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.leaderboard-side .hacker-terminal {
+  flex: 1;
+  min-height: 120px;
+  display: flex;
+  flex-direction: column;
+}
+
+.leaderboard-side .hacker-terminal--small {
+  flex: 1;
+  min-height: 80px;
+}
+
+.leaderboard-full {
+  background: var(--bg-panel);
+  border: 1px solid var(--border);
+  box-shadow: 0 0 0 1px rgba(255, 102, 0, 0.1), 0 0 30px rgba(0, 0, 0, 0.5);
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.leaderboard-full-inner {
+  max-width: 100%;
+  margin: 0 auto;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.leaderboard-wrap {
+  overflow: visible;
+}
+
+/* Hacker-terminaler ved siden af leaderboard */
+.hacker-terminal {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  background: var(--bg-dark);
+  border: 1px solid var(--neon-dim);
+  margin-bottom: 0.75rem;
+  overflow: hidden;
+  box-shadow: 0 0 15px rgba(255, 102, 0, 0.08);
+}
+
+.hacker-terminal-title {
+  font-size: 0.65rem;
+  padding: 0.25rem 0.5rem;
+  background: rgba(255, 102, 0, 0.1);
+  color: var(--neon);
+  border-bottom: 1px solid var(--neon-dim);
+  letter-spacing: 0.1em;
+}
+
+/* Skjul scrollbar på terminal-vinduer (scroll virker stadig) */
+.hacker-terminal-output,
+.leaderboard-side .hacker-terminal-output,
+.fake-terminal-output,
+.pane-body {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.hacker-terminal-output::-webkit-scrollbar,
+.leaderboard-side .hacker-terminal-output::-webkit-scrollbar,
+.fake-terminal-output::-webkit-scrollbar,
+.pane-body::-webkit-scrollbar {
+  display: none;
+}
+
+.hacker-terminal-output {
+  margin: 0;
+  padding: 0.5rem 0.6rem;
+  font-size: 0.7rem;
+  line-height: 1.4;
+  color: var(--neon);
+  text-shadow: 0 0 6px var(--neon-glow);
+  min-height: 160px;
+  max-height: 160px;
+  overflow: hidden;
+  white-space: pre-wrap;
+  word-break: break-all;
+}
+
+/* På leaderboard fylder terminalerne resten af skærmhøjden – faste andele, ingen hop */
+.leaderboard-side .hacker-terminal {
+  min-height: 140px;
+}
+
+.leaderboard-side .hacker-terminal--small {
+  min-height: 90px;
+}
+
+.leaderboard-side .hacker-terminal-output {
+  flex: 1;
+  min-height: 50px;
+  max-height: none;
+  overflow: auto;
+}
+
+.hacker-terminal--small .hacker-terminal-output {
+  min-height: 100px;
+  max-height: 100px;
+}
+
+.leaderboard-side .hacker-terminal--small .hacker-terminal-output {
+  min-height: 40px;
+  max-height: none;
+  flex: 1;
+}
+
+.hacker-terminal-cursor {
+  height: 2px;
+  background: var(--neon);
+  animation: cursor-blink 1s step-end infinite;
+  margin: 0 0.5rem 0.4rem;
+  width: 0.6em;
+  display: inline-block;
+  box-shadow: 0 0 6px var(--neon-glow);
+}
+
+.hacker-terminal-output .cmd { color: var(--neon-bright); }
+.hacker-terminal-output .muted { color: var(--neon-dim); opacity: 0.85; }
+.hacker-terminal-output .ok { color: var(--success); }
+.hacker-terminal-output .warn { color: #f59e0b; }
+
+.screen-title {
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  color: var(--neon);
+  margin: 0 0 1.5rem;
+  text-shadow: 0 0 10px var(--neon-glow);
+}
+
+.bracket {
+  color: var(--text-dim);
+  font-weight: 400;
+}
+
+
+.leaderboard {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.95rem;
+}
+
+.leaderboard th,
+.leaderboard td {
+  padding: 0.75rem 1rem;
+  text-align: left;
+  border-bottom: 1px solid var(--border);
+}
+
+.leaderboard th {
+  color: var(--neon);
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.leaderboard tbody tr {
+  transition: background 0.2s;
+}
+
+.leaderboard tbody tr:hover {
+  background: rgba(255, 102, 0, 0.05);
+}
+
+.leaderboard tbody tr:nth-child(1) {
+  color: var(--neon-bright);
+  text-shadow: 0 0 8px var(--neon-glow);
+}
+
+.leaderboard .loading {
+  color: var(--text-dim);
+  font-style: italic;
+  text-align: center;
+  padding: 2rem;
+}
+
+.leaderboard-full .hint {
+  margin: 1.5rem 0 0;
+  font-size: 0.8rem;
+  color: var(--text-dim);
+}
+
+/* ---------- Screen 2: Terminal ---------- */
+.screen-terminal {
+  display: flex;
+  flex-direction: column;
+  padding-top: 0.5rem;
+}
+
+.terminal-start-wrap {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 200px;
+}
+
+.terminal-start-wrap[hidden] {
+  display: none !important;
+  min-height: 0;
+  flex: none;
+}
+
+.terminal-start-box {
+  background: var(--bg-panel);
+  border: 1px solid var(--border);
+  box-shadow: 0 0 0 1px rgba(255, 102, 0, 0.1);
+  padding: 1.25rem 1.5rem;
+  max-width: 320px;
+  width: 100%;
+}
+
+.terminal-start-box .screen-title {
+  margin-bottom: 0.5rem;
+  font-size: 0.95rem;
+}
+
+.terminal-start-hint {
+  font-size: 0.8rem;
+  color: var(--text-dim);
+  margin: 0 0 1rem;
+  line-height: 1.35;
+}
+
+.terminal-start-form label {
+  display: block;
+  font-size: 0.75rem;
+  color: var(--text-dim);
+  margin-bottom: 0.25rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.terminal-start-form input[type="text"] {
+  width: 100%;
+  padding: 0.5rem 0.6rem;
+  font-family: var(--font-mono);
+  font-size: 0.95rem;
+  background: var(--bg-deep);
+  border: 1px solid var(--border);
+  color: var(--text);
+  margin-bottom: 0.75rem;
+}
+
+.terminal-start-form input:focus {
+  outline: none;
+  border-color: var(--neon);
+  box-shadow: 0 0 12px var(--neon-glow);
+}
+
+.terminal-btn-start {
+  width: 100%;
+  padding: 0.5rem 0.75rem;
+  font-size: 0.9rem;
+}
+
+.terminal-workspace {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+}
+
+.terminal-workspace[hidden] {
+  display: none !important;
+}
+
+.terminal-timer {
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--neon);
+  text-shadow: 0 0 10px var(--neon-glow);
+  letter-spacing: 0.1em;
+}
+
+.terminal-btn-commit {
+  padding: 0.35rem 0.75rem;
+  font-size: 0.75rem;
+}
+
+/* ---------- Screen 2: Tmux layout (efter start) ---------- */
+
+.tmux-layout {
+  display: grid;
+  grid-template-columns: 220px 1fr;
+  grid-template-rows: 1fr;
+  gap: 0;
+  flex: 1;
+  min-height: 420px;
+  border: 1px solid var(--border);
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.4), inset 0 0 0 1px rgba(255, 102, 0, 0.08);
+}
+
+@media (max-width: 700px) {
+  .tmux-layout {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto 1fr;
+  }
+}
+
+/* Pane: tmux-style vindue med title bar */
+.pane {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  background: var(--bg-dark);
+  border-right: 1px solid var(--border);
+}
+
+.pane:last-child {
+  border-right: none;
+}
+
+.pane-list {
+  border-right: 1px solid var(--neon-dim);
+}
+
+.pane-title {
+  font-size: 0.7rem;
+  padding: 0.35rem 0.6rem;
+  background: var(--tmux-title-bg);
+  color: var(--tmux-title-fg);
+  border-bottom: 1px solid var(--neon);
+  letter-spacing: 0.1em;
+  flex-shrink: 0;
+  box-shadow: 0 0 10px rgba(255, 102, 0, 0.15);
+  position: relative;
+  overflow: hidden;
+}
+
+.pane-title::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 102, 0, 0.12), transparent);
+  animation: pane-shimmer 4s ease-in-out infinite;
+}
+
+@keyframes pane-shimmer {
+  0% { left: -100%; }
+  60%, 100% { left: 150%; }
+}
+
+.pane-body {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+  padding: 0.6rem;
+  font-size: 0.85rem;
+}
+
+/* Pane stack (højre side: opgave + submit) */
+.pane-stack {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.pane-stack .pane {
+  border-right: none;
+  border-bottom: 1px solid var(--border);
+}
+
+.pane-stack .pane:last-child {
+  border-bottom: none;
+}
+
+.pane-detail {
+  flex: 1;
+  min-height: 200px;
+  min-width: 0;
+}
+
+.pane-submit {
+  flex: 0 0 180px;
+  min-height: 180px;
+  max-height: 180px;
+  min-width: 0;
+}
+
+/* Challenge list (tmux window list style) */
+.tmux-window-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.tmux-window-list [role="option"] {
+  display: block;
+  padding: 0.5rem 0.6rem;
+  margin-bottom: 2px;
+  color: var(--text-dim);
+  cursor: pointer;
+  border-left: 2px solid transparent;
+  transition: color 0.2s, background 0.2s, border-color 0.2s;
+}
+
+.tmux-window-list [role="option"]:hover {
+  color: var(--text);
+  background: rgba(255, 102, 0, 0.06);
+}
+
+.tmux-window-list [role="option"].active {
+  color: var(--neon);
+  border-left-color: var(--neon);
+  background: rgba(255, 102, 0, 0.1);
+}
+
+.tmux-window-list .challenge-list-title {
+  display: inline;
+}
+
+.tmux-window-list .challenge-done {
+  color: var(--success, #22c55e);
+  margin-right: 0.35rem;
+  font-weight: 700;
+}
+
+.tmux-window-list .challenge-pts {
+  font-size: 0.75rem;
+  opacity: 0.8;
+  margin-top: 0.15rem;
+}
+
+.tmux-prompt {
+  margin-top: 0.75rem;
+  font-size: 0.75rem;
+  color: var(--text-dim);
+}
+
+/* Terminal-style indhold i detail pane – fast højde så pane ikke hopper */
+.pane-detail-body {
+  padding: 0.75rem;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.pane-detail-body > div {
+  min-height: 0;
+}
+
+.terminal-block {
+  margin: 0;
+  white-space: pre-wrap;
+  word-break: break-word;
+  font-size: 0.85rem;
+  line-height: 1.5;
+  color: var(--text);
+}
+
+.terminal-prompt {
+  color: var(--neon);
+  margin-right: 0.4rem;
+}
+
+.terminal-block .challenge-title {
+  color: var(--neon-bright);
+  font-weight: 600;
+}
+
+.terminal-block .challenge-desc {
+  color: var(--text-dim);
+}
+
+/* Fake Linux-terminal (opgave: Terminal) */
+.fake-terminal-wrap {
+  margin: 0;
+  padding: 0;
+}
+
+.fake-terminal-wrap[hidden] {
+  display: none !important;
+}
+
+.fake-terminal-output {
+  margin: 0 0 0.25rem;
+  padding: 0.4rem 0.5rem;
+  font-size: 0.8rem;
+  line-height: 1.5;
+  white-space: pre-wrap;
+  word-break: break-word;
+  color: var(--neon);
+  text-shadow: 0 0 6px rgba(255, 102, 0, 0.3);
+  background: var(--bg-deep);
+  border: 1px solid var(--border);
+  height: 200px;
+  overflow-y: auto;
+  font-family: var(--font-mono);
+  flex-shrink: 0;
+}
+
+.fake-terminal-output .fake-terminal-line {
+  display: block;
+}
+
+.fake-terminal-output .fake-terminal-prompt-out {
+  color: #7cb342;
+  font-weight: 600;
+}
+
+.fake-terminal-output .fake-terminal-cmdline {
+  color: var(--text);
+}
+
+.fake-terminal-output .fake-terminal-welcome {
+  color: var(--text-dim);
+  font-style: italic;
+}
+
+.fake-terminal-output .fake-terminal-completion-list {
+  color: var(--neon-dim);
+  font-style: italic;
+}
+
+.fake-terminal-input-line {
+  display: flex;
+  align-items: center;
+  flex-wrap: nowrap;
+  gap: 0.25rem;
+  padding: 0.2rem 0;
+  border-left: 2px solid var(--neon);
+  padding-left: 0.35rem;
+  box-shadow: 0 0 12px rgba(255, 102, 0, 0.15);
+  background: rgba(0, 0, 0, 0.2);
+}
+
+.fake-terminal-prompt {
+  color: #7cb342;
+  font-size: 0.8rem;
+  font-weight: 600;
+  flex-shrink: 0;
+}
+
+.fake-terminal-prompt::after {
+  content: '';
+  display: inline-block;
+  width: 0.5em;
+  height: 1em;
+  margin-left: 1px;
+  background: var(--neon);
+  animation: fake-cursor-blink 1s step-end infinite;
+  vertical-align: text-bottom;
+}
+
+@keyframes fake-cursor-blink {
+  0%, 50% { opacity: 1; }
+  51%, 100% { opacity: 0; }
+}
+
+.fake-terminal-input {
+  flex: 1;
+  min-width: 0;
+  padding: 0.3rem 0.4rem;
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  background: transparent;
+  border: none;
+  color: var(--neon-bright);
+  outline: none;
+  caret-color: var(--neon);
+}
+
+.fake-terminal-input::placeholder {
+  color: var(--text-dim);
+  opacity: 0.6;
+}
+
+.fake-terminal-input:focus {
+  box-shadow: none;
+}
+
+/* Terminal form (submit pane) */
+.terminal-form {
+  margin: 0;
+}
+
+.hint-row {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  margin-top: 0.4rem;
+}
+
+.terminal-btn-hint {
+  align-self: flex-start;
+  margin-top: 0;
+  font-size: 0.75rem;
+  padding: 0.25rem 0.5rem;
+  color: var(--text-dim);
+  border-color: var(--border);
+}
+
+.terminal-btn-hint:hover {
+  color: var(--neon);
+  border-color: var(--neon);
+}
+
+.hint-box {
+  padding: 0.4rem 0.5rem;
+  background: rgba(0, 0, 0, 0.25);
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  font-size: 0.78rem;
+}
+
+.hint-box-title {
+  font-weight: 600;
+  color: var(--neon);
+  margin-bottom: 0.25rem;
+  font-size: 0.8rem;
+}
+
+.hint-list {
+  margin: 0;
+  padding-left: 1.1rem;
+}
+
+.hint-item {
+  margin-bottom: 0.2rem;
+  color: var(--text);
+  line-height: 1.35;
+}
+
+.hint-item:last-child {
+  margin-bottom: 0;
+}
+
+.terminal-line {
+  display: flex;
+  align-items: center;
+  margin-bottom: 0.25rem;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+
+.terminal-line .terminal-btn {
+  margin-top: 0;
+  flex-shrink: 0;
+}
+
+.terminal-input {
+  flex: 1;
+  min-width: 120px;
+  padding: 0.35rem 0.5rem;
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  background: var(--bg-deep);
+  border: 1px solid var(--border);
+  color: var(--text);
+  margin-left: 0.25rem;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.terminal-input:focus {
+  outline: none;
+  border-color: var(--neon);
+  box-shadow: 0 0 8px var(--neon-glow);
+}
+
+.terminal-input::placeholder {
+  color: var(--text-dim);
+  opacity: 0.7;
+}
+
+/* Flag-felt: neon orange */
+.terminal-input--flag,
+#flag-input.terminal-input {
+  color: var(--neon-bright);
+  border-color: var(--neon-dim);
+  box-shadow: 0 0 0 1px rgba(255, 102, 0, 0.2);
+}
+
+.terminal-input--flag::placeholder,
+#flag-input.terminal-input::placeholder {
+  color: var(--neon-dim);
+  opacity: 0.9;
+}
+
+.terminal-input--flag:focus,
+#flag-input.terminal-input:focus {
+  border-color: var(--neon);
+  box-shadow: 0 0 12px var(--neon-glow), 0 0 0 1px var(--neon);
+}
+
+.terminal-btn {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  margin-top: 0.5rem;
+  padding: 0.35rem 0.7rem;
+  background: transparent;
+  color: var(--neon);
+  border: 1px solid var(--neon);
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+}
+
+.terminal-btn:hover {
+  background: var(--neon);
+  color: var(--bg-deep);
+  box-shadow: 0 0 12px var(--neon-glow);
+}
+
+.terminal-output {
+  margin-top: 0.5rem;
+  font-size: 0.85rem;
+  height: 3em;
+  min-height: 3em;
+  overflow-y: auto;
+}
+
+.terminal-output.success {
+  color: var(--success);
+}
+
+.terminal-output.error {
+  color: var(--error);
+}
+
+/* ---------- Hidden flag (inspect element) ---------- */
+.hidden-flag-ctf {
+  position: absolute;
+  left: -9999px;
+  opacity: 0;
+  pointer-events: none;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
+/* ---------- Footer ---------- */
+.footer {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  padding: 1rem;
+  font-size: 0.7rem;
+  color: var(--text-dim);
+  letter-spacing: 0.1em;
+}

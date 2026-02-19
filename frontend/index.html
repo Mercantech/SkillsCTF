@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SKILLS CTF 2026</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Orbitron:wght@700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <!-- CTF: View Source - flag in comment below -->
+  <!-- SKILLS{view_source_is_fun} -->
+
+  <div class="scanlines" aria-hidden="true"></div>
+  <div class="grid-bg" aria-hidden="true"></div>
+
+  <!-- Tmux-style nav: switch between Leaderboard and Terminal -->
+  <nav class="nav-tmux" role="tablist">
+    <div class="nav-tmux-inner">
+      <button type="button" id="tab-leaderboard" class="nav-tab active" data-screen="leaderboard" role="tab" aria-selected="true">0:Leaderboard</button>
+      <button type="button" id="tab-terminal" class="nav-tab" data-screen="terminal" role="tab" aria-selected="false">1:Terminal</button>
+    </div>
+  </nav>
+
+  <header class="header header-compact">
+    <div id="header-toolbar" class="header-toolbar" hidden>
+      <span class="terminal-timer" id="terminal-timer">0:00</span>
+      <button type="button" class="terminal-btn terminal-btn-commit" id="btn-commit">AFSLUT & GEM SCORE</button>
+    </div>
+    <div class="logo-wrap">
+      <h1 class="logo-text"><span class="glitch" data-text="SKILLS CTF">SKILLS CTF</span> <span class="year">2026</span></h1>
+    </div>
+  </header>
+
+  <!-- ========== SCREEN 1: LEADERBOARD (egen skærm) ========== -->
+  <section id="screen-leaderboard" class="screen screen-leaderboard" role="tabpanel" aria-labelledby="tab-leaderboard">
+    <div class="leaderboard-layout">
+      <div class="leaderboard-side leaderboard-side--left" aria-hidden="true">
+        <div class="hacker-terminal">
+          <div class="hacker-terminal-title">sys@skillsctf:~</div>
+          <pre class="hacker-terminal-output" id="hacker-terminal-left"></pre>
+          <div class="hacker-terminal-cursor"></div>
+        </div>
+        <div class="hacker-terminal hacker-terminal--small">
+          <div class="hacker-terminal-title">log</div>
+          <pre class="hacker-terminal-output" id="hacker-terminal-left-log"></pre>
+        </div>
+      </div>
+      <div class="leaderboard-full">
+        <div class="leaderboard-full-inner">
+          <h2 class="screen-title"><span class="bracket">[</span> LEADERBOARD <span class="bracket">]</span></h2>
+          <div class="leaderboard-wrap">
+            <table class="leaderboard">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>NAVN</th>
+                  <th>POINT</th>
+                  <th>TID</th>
+                </tr>
+              </thead>
+              <tbody id="leaderboard-body">
+                <tr><td colspan="4" class="loading">Henter leaderboard…</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <div class="leaderboard-side leaderboard-side--right" aria-hidden="true">
+        <div class="hacker-terminal">
+          <div class="hacker-terminal-title">root@ctf:~</div>
+          <pre class="hacker-terminal-output" id="hacker-terminal-right"></pre>
+          <div class="hacker-terminal-cursor"></div>
+        </div>
+        <div class="hacker-terminal hacker-terminal--small">
+          <div class="hacker-terminal-title">monitor</div>
+          <pre class="hacker-terminal-output" id="hacker-terminal-right-mon"></pre>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== SCREEN 2: TERMINAL / OPGAVER ========== -->
+  <section id="screen-terminal" class="screen screen-terminal" role="tabpanel" aria-labelledby="tab-terminal" hidden>
+    <!-- Step A: Indtast navn (før start) -->
+    <div id="terminal-start-wrap" class="terminal-start-wrap">
+      <div class="terminal-start-box">
+        <h2 class="screen-title"><span class="bracket">[</span> INDTAST NAVN <span class="bracket">]</span></h2>
+        <p class="terminal-start-hint">Når du trykker Start, starter tiden. Løs opgaver og tryk Afslut for at gemme din score.</p>
+        <form id="start-form" class="terminal-start-form">
+          <label for="start-name">Navn</label>
+          <input type="text" id="start-name" placeholder="Dit alias" maxlength="64" autocomplete="off" required>
+          <button type="submit" class="terminal-btn terminal-btn-start">START</button>
+        </form>
+      </div>
+    </div>
+    <!-- Step B: Tmux-layout (efter start: timer + afslut er i header) -->
+    <div id="terminal-workspace" class="terminal-workspace" hidden>
+      <div class="tmux-layout">
+      <!-- Venstre pane: opgaveliste (som tmux vinduer) -->
+      <div class="pane pane-list">
+        <div class="pane-title">challenges</div>
+        <div class="pane-body">
+          <div class="tmux-window-list" id="challenge-list" role="listbox"></div>
+          <div class="tmux-prompt tmux-prompt-list">Klik på en opgave →</div>
+        </div>
+      </div>
+      <!-- Højre side: to panes under hinanden -->
+      <div class="pane-stack">
+        <!-- Øverste pane: valgt opgave (beskrivelse) -->
+        <div class="pane pane-detail">
+          <div class="pane-title">opgave</div>
+          <div class="pane-body pane-detail-body">
+            <div id="challenge-detail-wrap">
+              <pre class="terminal-block" id="challenge-detail"><span class="terminal-prompt">$<span class="cursor-blink"></span></span> Vælg en opgave til venstre.</pre>
+            </div>
+            <div id="fake-terminal-wrap" class="fake-terminal-wrap" hidden>
+              <pre class="fake-terminal-output" id="fake-terminal-output"></pre>
+              <div class="fake-terminal-input-line">
+                <span class="fake-terminal-prompt" id="fake-terminal-prompt">ctf@skills:~$</span>
+                <input type="text" id="fake-terminal-input" class="fake-terminal-input" autocomplete="off" spellcheck="false" placeholder=" ">
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Nederste pane: indsend flag + output -->
+        <div class="pane pane-submit">
+          <div class="pane-title">submit</div>
+          <div class="pane-body">
+            <form id="submit-form" class="terminal-form">
+              <div class="terminal-line">
+                <span class="terminal-prompt">flag$<span class="cursor-blink"></span></span>
+                <input type="text" id="flag-input" placeholder=" SKILLS{...} eller kommando (help, ls, whoami…)" autocomplete="off" class="terminal-input terminal-input--flag">
+                <button type="submit" class="terminal-btn">INDSEND</button>
+              </div>
+              <input type="hidden" id="player-name" value="">
+              <input type="hidden" id="challenge-select-value">
+            </form>
+            <div class="hint-row">
+              <button type="button" id="btn-hint" class="terminal-btn terminal-btn-hint">Vis hint</button>
+              <div id="hint-box" class="hint-box" hidden>
+                <div class="hint-box-title">Hints</div>
+                <ol id="hint-list" class="hint-list"></ol>
+              </div>
+            </div>
+            <div class="terminal-output" id="submit-output" aria-live="polite"></div>
+          </div>
+        </div>
+      </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTF: Hidden div challenge - flag below (inspect element) -->
+  <div id="hidden-flag-ctf" class="hidden-flag-ctf" aria-hidden="true">SKILLS{inspect_element}</div>
+
+  <script src="app.js"></script>
+  <script>
+    // CTF: Console challenge - hint in console
+    (function() {
+      console.log('%c[CTF HINT] Flag for "Console"-opgaven: SKILLS{console_log_winner}', 'color: #ff6600; font-weight: bold; font-size: 14px;');
+    })();
+  </script>
+</body>
+</html>
