@@ -8,7 +8,7 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
     ports:
-      - "5432:5432"
+      - "15432:5432"   # Host 15432 for at undgå konflikt med anden PostgreSQL på fælles server
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U ctf -d skillsctf"]
       interval: 5s
@@ -18,7 +18,7 @@ services:
   backend:
     build: .
     ports:
-      - "3000:3000"
+      - "13000:3000"   # Host 13000 for fælles server; appen kører på http://<server>:13000
     environment:
       NODE_ENV: production
       DATABASE_URL: postgresql://ctf:ctf_secret_2026@db:5432/skillsctf
